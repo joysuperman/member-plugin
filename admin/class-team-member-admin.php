@@ -139,4 +139,36 @@ class Team_Member_Admin {
 		register_taxonomy('member_type', 'team_member', $args);
 	}
 
+	// Add custom meta box for position field
+	public function add_team_member_position_meta_box() {
+		add_meta_box(
+			'team_member_position',
+			'Position',
+			array($this, 'render_team_member_position_meta_box'),
+			'team_member',
+			'normal',
+			'default'
+		);
+	}
+
+// Render meta box content
+	public function render_team_member_position_meta_box($post) {
+		$position = get_post_meta($post->ID, 'position', true);
+		?>
+        <label for="team_member_position">Position:</label>
+        <input type="text" id="team_member_position" name="team_member_position" value="<?php echo esc_attr($position); ?>">
+		<?php
+	}
+
+	// Save meta box data
+	public function save_team_member_position_meta_data($post_id) {
+		if (array_key_exists('team_member_position', $_POST)) {
+			update_post_meta(
+				$post_id,
+				'position',
+				sanitize_text_field($_POST['team_member_position'])
+			);
+		}
+	}
+
 }

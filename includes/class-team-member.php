@@ -162,6 +162,12 @@ class Team_Member {
 
 		// Register Post Type taxonomy in Members
 		$this->loader->add_action( 'init', $plugin_admin, 'register_member_type_taxonomy' );
+
+		// Add Metaboxs in Member Post Page
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_team_member_position_meta_box' );
+
+		// Save Metaboxs in Member Post Page
+		$this->loader->add_action( 'save_post', $plugin_admin, 'save_team_member_position_meta_data' );
 	}
 
 	/**
@@ -178,7 +184,7 @@ class Team_Member {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-		$this->loader->add_action( 'shortcode', $this, 'register_shortcodes' );
+		add_shortcode('members', array($plugin_public, 'team_members_shortcode'));
 	}
 
 	/**

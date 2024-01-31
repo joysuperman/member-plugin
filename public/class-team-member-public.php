@@ -100,19 +100,14 @@ class Team_Member_Public {
 
 	}
 
-	public function register_shortcodes() {
-		add_shortcode('team_members', 'team_members_shortcode');
-	}
 
 	// Shortcode: team_members
 	public function team_members_shortcode($atts) {
-
-		// return 'Hello, World!';
 		// Shortcode attributes
 		$atts = shortcode_atts(array(
-			'count' => -1, // Default to show all
-			'image_position' => 'top', // Default image position
-			'show_see_all' => true, // Default to show "See all" button
+			'count' => -1,
+			'image_position' => 'top',
+			'show_see_all' => true,
 		), $atts);
 
 		// Query team members
@@ -128,14 +123,15 @@ class Team_Member_Public {
 			while ($team_members->have_posts()) {
 				$team_members->the_post();
 				if ($atts['image_position'] === 'top') {
-					$this->render_member_with_image_on_top();
+					$this->render_member_with_image_on_top(get_post());
 				} else {
-					$this->render_member_with_image_on_bottom();
+					$this->render_member_with_image_on_bottom(get_post());
 				}
 			}
 			// Reset post data
 			wp_reset_postdata();
 		}
+
 		// "See all" button
 		if ($atts['show_see_all']) {
 			echo '<a href="' . get_post_type_archive_link('team_member') . '">See all</a>';
@@ -143,12 +139,11 @@ class Team_Member_Public {
 		return ob_get_clean();
 	}
 
-
 	// Render member with image on top
 	private function render_member_with_image_on_top($post) {
 		$image = get_the_post_thumbnail($post->ID, 'thumbnail');
 		$name = get_the_title($post);
-		$position = get_field('position', $post->ID); // Assuming 'position' is a custom field
+		$position = get_post_meta('position', $post->ID);
 		$bio = get_the_excerpt($post);
 
 		$html = '<div class="team-member">';
@@ -161,12 +156,13 @@ class Team_Member_Public {
 		$html .= '</div>';
 
 		echo $html;
+
 	}
 
-	 Render member with image on bottom
+// Render member with image on bottom
 	private function render_member_with_image_on_bottom($post) {
 		$name = get_the_title($post);
-		$position = get_field('position', $post->ID);
+		$position = get_post_meta('position', $post->ID);
 		$bio = get_the_excerpt($post);
 		$image = get_the_post_thumbnail($post->ID, 'thumbnail');
 
@@ -180,5 +176,6 @@ class Team_Member_Public {
 		$html .= '</div>';
 
 		echo $html;
+
 	}
 }
