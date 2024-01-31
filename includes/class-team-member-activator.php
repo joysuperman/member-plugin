@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * Fired during plugin activation
+ *
+ * @link       https://joymojumder.com/
+ * @since      1.0.0
+ *
+ * @package    Team_Member
+ * @subpackage Team_Member/includes
+ */
+
+/**
+ * Fired during plugin activation.
+ *
+ * This class defines all code necessary to run during the plugin's activation.
+ *
+ * @since      1.0.0
+ * @package    Team_Member
+ * @subpackage Team_Member/includes
+ * @author     joySuperman <hi@joymojumder.com>
+ */
+class Team_Member_Activator {
+
+	/**
+	 * Short Description. (use period)
+	 *
+	 * Long Description.
+	 *
+	 * @since    1.0.0
+	 */
+	public static function activate() {
+		self::register_post_type();
+		self::register_taxonomy();
+	}
+
+	private static function register_post_type() {
+		$labels = array(
+			'name' => 'Team Members',
+			'singular_name' => 'Team Member',
+		);
+
+		$args = array(
+			'labels' => $labels,
+			'public' => true,
+			'has_archive' => true,
+			'supports' => array('title', 'editor', 'thumbnail'),
+		);
+
+		register_post_type('team_member', $args);
+	}
+
+	private static function register_taxonomy() {
+		$labels = array(
+			'name' => 'Member Types',
+			'singular_name' => 'Member Type',
+		);
+
+		$args = array(
+			'labels' => $labels,
+			'hierarchical' => true,
+		);
+
+		register_taxonomy('member_type', 'team_member', $args);
+	}
+
+}
