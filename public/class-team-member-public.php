@@ -120,6 +120,9 @@ class Team_Member_Public {
 		// Output HTML based on image position
 		ob_start();
 		if ($team_members->have_posts()) {
+			$column_class = 'team-members-grid';
+			$column_count = $atts['count'];
+			echo '<div class="' . $column_class . '" style="grid-template-columns: repeat(' . $column_count . ', 1fr);">';
 			while ($team_members->have_posts()) {
 				$team_members->the_post();
 				if ($atts['image_position'] === 'top') {
@@ -128,13 +131,16 @@ class Team_Member_Public {
 					$this->render_member_with_image_on_bottom(get_post());
 				}
 			}
+			echo '</div>';
+
+			// Display "See all" link if true
+			if ($atts['show_see_all'] == true) {
+				$archive_link = get_post_type_archive_link('team_member');
+				echo '<div class="archive-btn"><a href="' . esc_url($archive_link) . '" class="see-all">See all</a></div>';
+			}
+
 			// Reset post data
 			wp_reset_postdata();
-		}
-
-		// "See all" button
-		if ($atts['show_see_all']) {
-			echo '<a href="' . get_post_type_archive_link('team_member') . '">See all</a>';
 		}
 		return ob_get_clean();
 	}
@@ -143,15 +149,15 @@ class Team_Member_Public {
 	private function render_member_with_image_on_top($post) {
 		$image = get_the_post_thumbnail($post->ID, 'thumbnail');
 		$name = get_the_title($post);
-		$position = get_post_meta('position', $post->ID);
+		$position = get_post_meta($post->ID, 'position', true);
 		$bio = get_the_excerpt($post);
+		$permalink = get_permalink($post);
 
 		$html = '<div class="team-member">';
-		$html .= '<div class="team-member-image">' . $image . '</div>';
+		$html .= '<a href="'. esc_url($permalink) .'" class="team-member-image">' . $image . '</a>';
 		$html .= '<div class="team-member-details">';
-		$html .= '<h3>' . $name . '</h3>';
+		$html .= '<a href="'. esc_url($permalink) .'">' . $name . '</a>';
 		$html .= '<p>' . $position . '</p>';
-		$html .= '<div class="team-member-bio">' . $bio . '</div>';
 		$html .= '</div>';
 		$html .= '</div>';
 
@@ -159,20 +165,20 @@ class Team_Member_Public {
 
 	}
 
-// Render member with image on bottom
+	// Render member with image on bottom
 	private function render_member_with_image_on_bottom($post) {
 		$name = get_the_title($post);
-		$position = get_post_meta('position', $post->ID);
+		$position = get_post_meta($post->ID, 'position', true);
 		$bio = get_the_excerpt($post);
 		$image = get_the_post_thumbnail($post->ID, 'thumbnail');
+		$permalink = get_permalink($post);
 
 		$html = '<div class="team-member">';
 		$html .= '<div class="team-member-details">';
-		$html .= '<h3>' . $name . '</h3>';
+		$html .= '<a href="'. esc_url($permalink) .'">' . $name . '</a>';
 		$html .= '<p>' . $position . '</p>';
-		$html .= '<div class="team-member-bio">' . $bio . '</div>';
 		$html .= '</div>';
-		$html .= '<div class="team-member-image">' . $image . '</div>';
+		$html .= '<a href="'. esc_url($permalink) .'" class="team-member-image">' . $image . '</a>';
 		$html .= '</div>';
 
 		echo $html;
