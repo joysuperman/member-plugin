@@ -145,43 +145,39 @@ class Team_Member_Public {
 		return ob_get_clean();
 	}
 
-	// Render member with image on top
+	// Render member with image on Top
 	private function render_member_with_image_on_top($post) {
 		$image = get_the_post_thumbnail($post->ID, 'thumbnail');
 		$name = get_the_title($post);
 		$position = get_post_meta($post->ID, 'position', true);
-		$bio = get_the_excerpt($post);
 		$permalink = get_permalink($post);
 
 		$html = '<div class="team-member">';
 		$html .= '<a href="'. esc_url($permalink) .'" class="team-member-image">' . $image . '</a>';
 		$html .= '<div class="team-member-details">';
-		$html .= '<a href="'. esc_url($permalink) .'">' . $name . '</a>';
-		$html .= '<p>' . $position . '</p>';
+		$html .= '<a href="'. esc_url($permalink) .'">' . esc_html__($name, 'your-text-domain') . '</a>';
+		$html .= '<p>' . esc_html__($position, 'your-text-domain') . '</p>';
 		$html .= '</div>';
 		$html .= '</div>';
 
 		echo $html;
-
 	}
 
 	// Render member with image on bottom
 	private function render_member_with_image_on_bottom($post) {
 		$name = get_the_title($post);
 		$position = get_post_meta($post->ID, 'position', true);
-		$bio = get_the_excerpt($post);
 		$image = get_the_post_thumbnail($post->ID, 'thumbnail');
 		$permalink = get_permalink($post);
 
 		$html = '<div class="team-member">';
 		$html .= '<div class="team-member-details">';
-		$html .= '<a href="'. esc_url($permalink) .'">' . $name . '</a>';
-		$html .= '<p>' . $position . '</p>';
+		$html .= '<a href="'. esc_url($permalink) .'">' . esc_html__($name, 'your-text-domain') . '</a>';
+		$html .= '<p>' . esc_html__($position, 'your-text-domain') . '</p>';
 		$html .= '</div>';
 		$html .= '<a href="'. esc_url($permalink) .'" class="team-member-image">' . $image . '</a>';
 		$html .= '</div>';
 
 		echo $html;
-
 	}
 }
